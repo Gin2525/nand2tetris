@@ -5,9 +5,8 @@ using namespace std;
 using ll = long long;
 
 int main() {
-    std::string filename = "hogefile";
-    Parser *parser = new Parser(filename);
+    Parser *parser = new Parser("hoge.asm");
     cout << parser->fileLength << endl;
-    cout << parser->instructure.at(0);
+    cout << parser->currentComannd <<  endl;
     return 0;
 }

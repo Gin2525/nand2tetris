@@ -18,6 +18,8 @@ std::string Code::dest(std::string mnemonic) {
         return "110";
     }else if(mnemonic == "AMD"){
         return "111";
+    }else{
+        return "-1";
     }
 }
 
@@ -38,9 +40,7 @@ std::string Code::jump(std::string mnemonic){
         return "110";
     } else if(mnemonic == "JMP") {
         return "111";
+    } else {
+        return "-1";
     }
-}
-
-std::string Code::comp(std::string mnemonic){
-    
 }
