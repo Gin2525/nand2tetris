@@ -40,4 +40,34 @@ CHIP CPU {
 
     PARTS:
     // Put your code here:
+    Mux16(a=instruction, b=outALU, sel=instruction[15], out=inA);
+    Not(in=instruction[15], out=noti);
+    Or(a=noti, b=instruction[5], out=loadA);
+    ARegister(in=inA, load=loadA, out=outA,out[0..14]=addressM);
+    Mux16(a=outA, b=inM, sel=instruction[12], out=outAM);
+    ALU(x=outD, y=outAM, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8], f=instruction[7], no=instruction[6], out=outALU, out=outM , zr=outzr, ng=outng);
+    And(a=instruction[15], b=instruction[4], out=loadD);
+    DRegister(in=outALU, load=loadD, out=outD);
+
+    And(a=instruction[3], b=instruction[15], out=writeM);
+
+    Not(in=outzr, out=notzr);
+    Not(in=outng, out=notng);
+    And(a=notzr, b=notng, out=outJGT);
+    And(a=outzr, b=notng, out=outJEQ);
+    And(a=notzr, b=outng, out=outJLT);
+    Xor(a=outzr, b=outng, out=outJLE);
+
+    Mux(a=false, b=outJGT, sel=instruction[0], out=outmux000);
+    Mux(a=outJEQ, b=notng, sel=instruction[0], out=outmux001);
+    Mux(a=outJLT, b=notzr, sel=instruction[0], out=outmux002);
+    Mux(a=outJLE, b=true, sel=instruction[0], out=outmux003);
+    
+    Mux(a=outmux000, b=outmux001, sel=instruction[1], out=outmux00);
+    Mux(a=outmux002, b=outmux003, sel=instruction[1], out=outmux01);
+
+    Mux(a=outmux00, b=outmux01, sel=instruction[2], out=outmux);
+    And(a=outmux, b=instruction[15], out=outjump);
+
+    PC(in=outA, load=outjump, inc=true, reset=reset, out[0..14]=pc);
 }

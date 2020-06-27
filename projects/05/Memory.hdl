@@ -28,4 +28,13 @@ CHIP Memory {
 
     PARTS:
     // Put your code here:
+    And(a=address[13], b=address[14], out=keyflag);
+    Not(in=address[13], out=w1);
+    And(a=w1, b=address[14], out=scrflag);
+    DMux(in=load, sel=scrflag, a=loadmemory, b=loadscr);
+    RAM16K(in=in, load=loadmemory, address=address[0..13], out=outmemory);
+    Screen(in=in, load=loadscr, address=address[0..12], out=outscr);
+    Keyboard(out=outkey);
+    Mux16(a=outmemory, b=outscr, sel=scrflag, out=outMemScr);
+    Mux16(a=outMemScr, b=outkey, sel=keyflag, out=out);
 }
