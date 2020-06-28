@@ -53,19 +53,18 @@ int main(int argc, char *argv[]) {
     std::string HackFilename = asmFilename.substr(0, dotIdx) + ".hack";
 
     // open output stream for hack
-    ofstream wHackStream;
-    wHackStream.open(HackFilename, ios::ate);
-    if(!wHackStream) {
+    ofstream hackFile;
+    hackFile.open(HackFilename, ios::ate);
+    if(!hackFile) {
         std::cerr << "failure to open the hack file." << std::endl;
         std::exit(1);
     }
 
     while(parser->hasMoreCommands()) {
         parser->advance();
-        string hackLine = takeHackLine(parser, code);
-        wHackStream << hackLine << endl;
+        hackFile << takeHackLine(parser, code) << endl;
     }
 
-    wHackStream.close();
+    hackFile.close();
     return 0;
 }
