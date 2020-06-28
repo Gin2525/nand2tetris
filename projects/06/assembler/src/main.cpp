@@ -63,11 +63,20 @@ void init(Parser *parser, SymbolTable *symbolTable) {
     parser->reset();
 }
 
-string takeHackLine(Parser *parser, Code *code) {
+string takeHackLine(Parser *parser, Code *code, SymbolTable *symbolTable) {
     int t = parser->commandType();
     if(t == 0) {
         // A
-        return "0" + binary(parser->symbol());
+        string s = parser->symbol();
+        if(check_int(s))
+            return "0" + binary(s);
+        else {
+            if(symbolTable->contains(s)) {
+                return "0" + binary(::to_string(symbolTable->getAddress(s)));
+            } else {
+                return "-1";
+            }
+        }
     } else if(t == 1) {
         // C
         string dest = code->dest(parser->dest());
@@ -77,7 +86,11 @@ string takeHackLine(Parser *parser, Code *code) {
     } else if(t == 2) {
         // L
         //シンボルフリーなアセンブリにてL_COMMANDは出現しない
-        return "-1";
+        string s = parser->symbol();
+        if(symbolTable->contains(s))
+            return "0" + binary(to_string(symbolTable->getAddress(s)));
+        else
+            return "-1";
     } else {
         return "-1";
     }
@@ -109,8 +122,7 @@ int main(int argc, char *argv[]) {
     // generate hack
     while(parser->hasMoreCommands()) {
         parser->advance();
-        cout << takeHackLine(parser, code) << endl;
-        hackFile << takeHackLine(parser, code) << endl;
+        hackFile << takeHackLine(parser, code, symbolTable) << endl;
     }
 
     hackFile.close();
