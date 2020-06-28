@@ -8,7 +8,7 @@ using ll = long long;
 
 string binary(string strN) {
     if(strN == "0") {
-        return strN;
+        return "000000000000000";
     }
     int n = stoi(strN);
     string bin = "";
@@ -16,18 +16,21 @@ string binary(string strN) {
         bin = to_string(n % 2) + bin;
         n = n / 2;
     }
+    while(bin.size() < 15) {
+        bin = "0" + bin;
+    }
     return bin;
 }
 
 string takeHackLine(Parser *parser, Code *code) {
     int t = parser->commandType();
     if(t == 0) {
-        return binary(parser->symbol());
+        return "0" + binary(parser->symbol());
     } else if(t == 1) {
         string dest = code->dest(parser->dest());
         string comp = code->comp(parser->comp());
         string jump = code->jump(parser->jump());
-        return dest + comp + jump;
+        return "111" + comp + dest + jump;
     } else if(t == 2) {
         //シンボルフリーなアセンブリにてL_COMMANDは出現しない
         return "-1";
@@ -44,8 +47,8 @@ int main(int argc, char *argv[]) {
     std::string filename = argv[1];
     Code *code = new Code();
     Parser *parser = new Parser(filename);
-    int dotIdx = filename.find('.');
-    std::string writtenFilename = filename.substr(0, dotIdx) + ".hack";
+    int dotIdx = filename.rfind('.');
+    std::string writtenFilename = filename.substr(0,dotIdx) + ".hack";
 
     ofstream wHackStream;
     wHackStream.open(writtenFilename, ios::ate);

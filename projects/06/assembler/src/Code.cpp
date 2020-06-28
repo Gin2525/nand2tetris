@@ -21,7 +21,7 @@ Code::Code(){
     this->compMap["!A"] = "0110001";
     this->compMap["-D"] = "0001111";
     this->compMap["-A"] = "0110011";
-    this->compMap["D+1"] = "0111111";
+    this->compMap["D+1"] = "0011111";
     this->compMap["A+1"] = "0110111";
     this->compMap["D-1"] = "0001110";
     this->compMap["A-1"] = "0110010";
