@@ -40,7 +40,7 @@ void init(Parser *parser, SymbolTable *symbolTable) {
         parser->advance();
         if(parser->commandType() == 2) {
             // case: L_COMMAND
-            symbolTable->addEntry(parser->symbol(), addressCounter + 1);
+            symbolTable->addEntry(parser->symbol(), addressCounter);
             continue;
         }
         addressCounter++;
@@ -86,11 +86,7 @@ string takeHackLine(Parser *parser, Code *code, SymbolTable *symbolTable) {
     } else if(t == 2) {
         // L
         //シンボルフリーなアセンブリにてL_COMMANDは出現しない
-        string s = parser->symbol();
-        if(symbolTable->contains(s))
-            return "0" + binary(to_string(symbolTable->getAddress(s)));
-        else
-            return "-1";
+        return "";
     } else {
         return "-1";
     }
@@ -122,7 +118,9 @@ int main(int argc, char *argv[]) {
     // generate hack
     while(parser->hasMoreCommands()) {
         parser->advance();
-        hackFile << takeHackLine(parser, code, symbolTable) << endl;
+        string hackLine = takeHackLine(parser, code, symbolTable);
+        if(hackLine != "")
+            hackFile << hackLine << endl;
     }
 
     hackFile.close();
