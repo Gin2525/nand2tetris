@@ -25,6 +25,7 @@ Parser::Parser(std::string filename) {
     }
     this->nextIte = this->instructure.begin();
     this->fileLength = fileLength;
+    ifs.close();
 }
 
 bool Parser::hasMoreCommands() {

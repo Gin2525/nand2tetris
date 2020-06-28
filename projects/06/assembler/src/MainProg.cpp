@@ -6,23 +6,15 @@
 using namespace std;
 using ll = long long;
 
-void writeHackLine(std::string filename, std::string line) {
-    ofstream wHackStream;
-    wHackStream.open(filename, ios::app);
-    if(!wHackStream) {
-        std::cerr << "failure to open the file." << std::endl;
-        std::exit(1);
-    }
-    cout << line << endl;
-    wHackStream.close();
-}
-
 string binary(string strN) {
+    if(strN == "0") {
+        return strN;
+    }
     int n = stoi(strN);
     string bin = "";
     for(int i = 0; n > 0; i++) {
-        bin = bin + to_string(n % 2);
-        strN = n / 2;
+        bin = to_string(n % 2) + bin;
+        n = n / 2;
     }
     return bin;
 }
@@ -37,9 +29,9 @@ string takeHackLine(Parser *parser, Code *code) {
         string jump = code->jump(parser->jump());
         return dest + comp + jump;
     } else if(t == 2) {
-        //シンボルフリーなバイナリーにてL_COMMANDは出現しない
+        //シンボルフリーなアセンブリにてL_COMMANDは出現しない
         return "-1";
-    }else{
+    } else {
         return "-1";
     }
 }
@@ -53,12 +45,21 @@ int main(int argc, char *argv[]) {
     Code *code = new Code();
     Parser *parser = new Parser(filename);
     int dotIdx = filename.find('.');
-    std::string writtenFilename = filename.substr(0,dotIdx)+"hack";
+    std::string writtenFilename = filename.substr(0, dotIdx) + ".hack";
+
+    ofstream wHackStream;
+    wHackStream.open(writtenFilename, ios::ate);
+    if(!wHackStream) {
+        std::cerr << "failure to open the hack file." << std::endl;
+        std::exit(1);
+    }
 
     while(parser->hasMoreCommands()) {
         parser->advance();
         string hackLine = takeHackLine(parser, code);
-        writeHackLine(writtenFilename,hackLine);
+        wHackStream << hackLine << endl;
     }
+
+    wHackStream.close();
     return 0;
 }
