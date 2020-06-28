@@ -1,16 +1,16 @@
-#include<string>
-#include<vector>
-class Parser{
-private:
+#include <string>
+#include <vector>
+
+class Parser {
+  private:
     int fileLength;
     std::vector<std::string>::iterator nextIte;
     std::vector<std::string> instructure;
     std::string currentCommand;
-    
-public:
 
+  public:
     Parser(std::string);
-    
+
     bool hasMoreCommands();
     void advance();
     int commandType();

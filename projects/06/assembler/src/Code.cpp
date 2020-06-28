@@ -2,8 +2,8 @@
 #include <map>
 #include <string>
 
-Code::Code(){
-    this->destMap["null"]="000";
+Code::Code() {
+    this->destMap["null"] = "000";
     this->destMap["M"] = "001";
     this->destMap["D"] = "010";
     this->destMap["MD"] = "011";
@@ -53,9 +53,9 @@ Code::Code(){
 
 std::string Code::dest(std::string mnemonic) {
     auto itr = this->destMap.find(mnemonic);
-    if(itr != this->destMap.end()){
+    if(itr != this->destMap.end()) {
         return this->destMap[mnemonic];
-    }else{
+    } else {
         return "-1";
     }
 }
