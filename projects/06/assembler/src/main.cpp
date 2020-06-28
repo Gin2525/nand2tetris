@@ -1,5 +1,6 @@
 #include "Code.hpp"
 #include "Parser.hpp"
+#include "SymbolTable.hpp"
 #include <bits/stdc++.h>
 #include <string>
 #define rep(i, n) for(int i = 0; i < (n); ++i)
@@ -25,17 +26,33 @@ string binary(string strN) {
 string takeHackLine(Parser *parser, Code *code) {
     int t = parser->commandType();
     if(t == 0) {
+        // A
         return "0" + binary(parser->symbol());
     } else if(t == 1) {
+        // C
         string dest = code->dest(parser->dest());
         string comp = code->comp(parser->comp());
         string jump = code->jump(parser->jump());
         return "111" + comp + dest + jump;
     } else if(t == 2) {
+        // L
         //シンボルフリーなアセンブリにてL_COMMANDは出現しない
         return "-1";
     } else {
         return "-1";
+    }
+}
+
+void initSymbolTable(Parser *parser, SymbolTable *symbolTable) {
+    long addressCounter = 0;
+    while(parser->hasMoreCommands()) {
+        parser->advance();
+        if(parser->commandType() == 2) {
+            // case: L_COMMAND
+            symbolTable->addEntry(parser->symbol(), addressCounter+1);
+            continue;
+        }
+        addressCounter++;
     }
 }
 
