@@ -44,14 +44,17 @@ int main(int argc, char *argv[]) {
         cout << "missing count of given argments" << endl;
         return 1;
     }
-    std::string filename = argv[1];
+    std::string asmFilename = argv[1];
     Code *code = new Code();
-    Parser *parser = new Parser(filename);
-    int dotIdx = filename.rfind('.');
-    std::string writtenFilename = filename.substr(0,dotIdx) + ".hack";
+    Parser *parser = new Parser(asmFilename);
 
+    // create hack file name by asm filname.
+    int dotIdx = asmFilename.rfind('.');
+    std::string HackFilename = asmFilename.substr(0, dotIdx) + ".hack";
+
+    // open output stream for hack
     ofstream wHackStream;
-    wHackStream.open(writtenFilename, ios::ate);
+    wHackStream.open(HackFilename, ios::ate);
     if(!wHackStream) {
         std::cerr << "failure to open the hack file." << std::endl;
         std::exit(1);
