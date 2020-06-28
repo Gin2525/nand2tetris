@@ -15,6 +15,7 @@ class Parser {
     void advance();
     int commandType();
     void reset();
+    
     std::string symbol();
     std::string dest();
     std::string comp();

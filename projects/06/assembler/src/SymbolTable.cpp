@@ -1,4 +1,5 @@
 #include "SymbolTable.hpp"
+#include "Parser.hpp"
 #include <map>
 #include <string>
 

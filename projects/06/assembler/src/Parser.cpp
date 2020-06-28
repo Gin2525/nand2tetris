@@ -17,7 +17,7 @@ Parser::Parser(std::string filename) {
         buf.erase(std::remove_if(buf.begin(), buf.end(), isspace), buf.end());
         if(buf[0] == '/' && buf[1] == '/')
             continue;
-        if(buf=="")
+        if(buf == "")
             continue;
         this->instructure.push_back(buf);
         fileLength++;
@@ -57,8 +57,8 @@ int Parser::commandType() {
         return 1;
 }
 
-void Parser::reset(){
-    this->currentCommand=' ';
+void Parser::reset() {
+    this->currentCommand = ' ';
     this->nextIte = this->instructure.begin();
 }
 

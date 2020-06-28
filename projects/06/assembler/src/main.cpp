@@ -23,6 +23,46 @@ string binary(string strN) {
     return bin;
 }
 
+bool check_int(std::string str) {
+    try {
+        ::stoi(str);
+        return true;
+    } catch(...) {
+        return false;
+    }
+}
+
+void init(Parser *parser, SymbolTable *symbolTable) {
+    parser->reset();
+    // first scan
+    long addressCounter = 0;
+    while(parser->hasMoreCommands()) {
+        parser->advance();
+        if(parser->commandType() == 2) {
+            // case: L_COMMAND
+            symbolTable->addEntry(parser->symbol(), addressCounter + 1);
+            continue;
+        }
+        addressCounter++;
+    }
+    // reset parser
+    parser->reset();
+    // second scan
+    long varCounter = 16;
+    while(parser->hasMoreCommands()) {
+        parser->advance();
+        if(parser->commandType() == 0) {
+            // case: A_COMMAND
+            string s = parser->symbol();
+            if(!check_int(s) && !symbolTable->contains(s)) {
+                symbolTable->addEntry(parser->symbol(), varCounter++);
+            }
+        }
+    }
+    // reset parser
+    parser->reset();
+}
+
 string takeHackLine(Parser *parser, Code *code) {
     int t = parser->commandType();
     if(t == 0) {
@@ -43,23 +83,6 @@ string takeHackLine(Parser *parser, Code *code) {
     }
 }
 
-void initSymbolTable(Parser *parser, SymbolTable *symbolTable) {
-    // first scan
-    long addressCounter = 0;
-    while(parser->hasMoreCommands()) {
-        parser->advance();
-        if(parser->commandType() == 2) {
-            // case: L_COMMAND
-            symbolTable->addEntry(parser->symbol(), addressCounter+1);
-            continue;
-        }
-        addressCounter++;
-    }
-    // reset parser
-    
-    // second scan
-}
-
 int main(int argc, char *argv[]) {
     if(argc != 2) {
         cout << "missing count of given argments" << endl;
@@ -68,8 +91,10 @@ int main(int argc, char *argv[]) {
     std::string asmFilename = argv[1];
     Code *code = new Code();
     Parser *parser = new Parser(asmFilename);
+    SymbolTable *symbolTable = new SymbolTable();
+    init(parser, symbolTable);
 
-    // create hack file name by asm filname.
+    // make hack filename by asm filname.
     int dotIdx = asmFilename.rfind('.');
     std::string HackFilename = asmFilename.substr(0, dotIdx) + ".hack";
 
@@ -81,8 +106,10 @@ int main(int argc, char *argv[]) {
         std::exit(1);
     }
 
+    // generate hack
     while(parser->hasMoreCommands()) {
         parser->advance();
+        cout << takeHackLine(parser, code) << endl;
         hackFile << takeHackLine(parser, code) << endl;
     }
 
