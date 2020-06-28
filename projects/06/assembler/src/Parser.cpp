@@ -1,4 +1,5 @@
 #include "Parser.hpp"
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -14,6 +15,11 @@ Parser::Parser(std::string filename) {
     std::string buf;
     int fileLength = 0;
     while(std::getline(ifs, buf)) {
+        buf.erase(std::remove_if(buf.begin(), buf.end(), isspace), buf.end());
+        if(buf[0] == '/' && buf[1] == '/')
+            continue;
+        if(buf=="")
+            continue;
         this->instructure.push_back(buf);
         fileLength++;
     }
@@ -53,10 +59,9 @@ std::string Parser::symbol() {
     int commandType = this->commandType();
     if(commandType == 0)
         return this->currentCommand.substr(1);
-    else if(commandType == 2){
-        return this->currentCommand.substr(1,this->currentCommand.size()-2);
-    }
-    else
+    else if(commandType == 2) {
+        return this->currentCommand.substr(1, this->currentCommand.size() - 2);
+    } else
         return "error";
 }
 
@@ -77,11 +82,11 @@ std::string Parser::comp() {
     int right = this->currentCommand.size();
     for(int i = 0; i < this->currentCommand.size(); i++) {
         if(this->currentCommand.at(i) == '=')
-            left = i+1;
+            left = i + 1;
         else if(this->currentCommand.at(i) == ';')
             right = i;
     }
-    return this->currentCommand.substr(left, right-left);
+    return this->currentCommand.substr(left, right - left);
 }
 
 std::string Parser::jump() {
@@ -89,7 +94,7 @@ std::string Parser::jump() {
         return "error";
     for(int i = 0; i < this->currentCommand.size(); i++) {
         if(this->currentCommand.at(i) == ';')
-            return this->currentCommand.substr(i+1);
+            return this->currentCommand.substr(i + 1);
     }
     return "null";
 }
