@@ -44,6 +44,7 @@ string takeHackLine(Parser *parser, Code *code) {
 }
 
 void initSymbolTable(Parser *parser, SymbolTable *symbolTable) {
+    // first scan
     long addressCounter = 0;
     while(parser->hasMoreCommands()) {
         parser->advance();
@@ -54,6 +55,9 @@ void initSymbolTable(Parser *parser, SymbolTable *symbolTable) {
         }
         addressCounter++;
     }
+    // reset parser
+    
+    // second scan
 }
 
 int main(int argc, char *argv[]) {

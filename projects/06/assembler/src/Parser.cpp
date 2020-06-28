@@ -5,7 +5,6 @@
 #include <string>
 
 Parser::Parser(std::string filename) {
-    this->currentCommand = ' ';
     std::ifstream ifs(filename);
     if(!ifs) {
         std::cerr << "failure to open the file." << std::endl;
@@ -23,9 +22,11 @@ Parser::Parser(std::string filename) {
         this->instructure.push_back(buf);
         fileLength++;
     }
+    ifs.close();
+
+    this->currentCommand = ' ';
     this->nextIte = this->instructure.begin();
     this->fileLength = fileLength;
-    ifs.close();
 }
 
 bool Parser::hasMoreCommands() {
@@ -54,6 +55,11 @@ int Parser::commandType() {
         return 2;
     else
         return 1;
+}
+
+void Parser::reset(){
+    this->currentCommand=' ';
+    this->nextIte = this->instructure.begin();
 }
 
 std::string Parser::symbol() {
