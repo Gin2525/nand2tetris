@@ -27,6 +27,12 @@ int main() {
     if(!table->contains(symbol0))
         testFailured("throw a collect adderss");
 
+    if(table->getAddress("R1")!=1)
+        testFailured("access R1");
+
+    if(!table->contains("R1"))
+        testFailured("contains? R1");
+
     cout << "test sucessed" << endl;
     return 0;
 }
