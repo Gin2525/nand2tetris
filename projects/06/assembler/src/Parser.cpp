@@ -14,11 +14,18 @@ Parser::Parser(std::string filename) {
     std::string buf;
     int fileLength = 0;
     while(std::getline(ifs, buf)) {
+        // erase all space
         buf.erase(std::remove_if(buf.begin(), buf.end(), isspace), buf.end());
-        if(buf[0] == '/' && buf[1] == '/')
-            continue;
+
+        // erase comment
+        auto commentIdx = buf.find("//");
+        if(commentIdx != std::string::npos)
+            buf = buf.substr(0,commentIdx);
+
+        // only comment line is invalid
         if(buf == "")
             continue;
+
         this->instructure.push_back(buf);
         fileLength++;
     }
