@@ -85,8 +85,9 @@ string takeHackLine(Parser *parser, Code *code, SymbolTable *symbolTable) {
         return "111" + comp + dest + jump;
     } else if(t == 2) {
         // L
-        //シンボルフリーなアセンブリにてL_COMMANDは出現しない
-        return "";
+        // l commands is dummy command on asm
+        // l commands add the address of program line into symbolTable
+        return "skip";
     } else {
         return "-1";
     }
@@ -119,8 +120,13 @@ int main(int argc, char *argv[]) {
     while(parser->hasMoreCommands()) {
         parser->advance();
         string hackLine = takeHackLine(parser, code, symbolTable);
-        if(hackLine != "")
-            hackFile << hackLine << endl;
+        if(hackLine == "skip")
+            continue;
+        if(hackLine == "-1"){
+            std::cerr << "failure to generate the hack file."<<std::endl;
+            std::exit(1);
+        }
+        hackFile << hackLine << endl;
     }
 
     hackFile.close();
